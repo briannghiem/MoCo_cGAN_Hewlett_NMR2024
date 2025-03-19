@@ -1,7 +1,8 @@
 import tensorflow as tf
 from tensorflow.python.keras.layers import Concatenate, Dropout, MaxPooling3D
 from tensorflow.python.keras.layers.convolutional import Conv3D, Conv3DTranspose, UpSampling3D
-from tensorflow.python.keras.layers.normalization import BatchNormalization
+# from tensorflow.python.keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 from tensorflow.python.keras.models import Input, Model
 
 class get_generator(object):
