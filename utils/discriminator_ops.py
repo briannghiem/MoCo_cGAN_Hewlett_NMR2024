@@ -6,7 +6,8 @@ from tensorflow.python.keras.models import Input, Model
 from tensorflow.python.keras.layers import Dense, Flatten, InputLayer
 from tensorflow.python.keras.layers.advanced_activations import LeakyReLU
 from tensorflow.python.keras.layers.convolutional import Conv3D
-from tensorflow.python.keras.layers.normalization import BatchNormalization
+# from tensorflow.python.keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 
 class CC_layer(tf.keras.layers.Layer):
     # Custom layer which performs coil combination
