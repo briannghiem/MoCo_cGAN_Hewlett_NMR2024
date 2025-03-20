@@ -9,8 +9,9 @@ import tensorflow as tf
 from utils.discriminator_ops import get_discriminator
 from utils.generator_ops import get_generator
 from utils.image_process import combine_coils, gen_complexRI, image_pad
+
 from tensorflow.keras.optimizers import Adam
-from tensorflow.python.keras.models import Input, Model
+from tensorflow.keras import Input, Model
 
 class cGAN(object):
     def __init__(self,config):
