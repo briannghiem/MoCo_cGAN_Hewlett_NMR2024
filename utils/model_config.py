@@ -42,8 +42,8 @@ class data(object):
         typeSplit = '_'.join(typeSplit)
         
         # Define data shape
-        xdim = 192
-        ydim = 160
+        xdim = 224
+        ydim = 192
         n_slices = 8        
         if typeSplit == 'cGAN':
             self.channel_opt = 'COMBINED'
