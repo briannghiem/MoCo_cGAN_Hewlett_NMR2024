@@ -1,12 +1,19 @@
 import numpy as np
 import tensorflow as tf
 from utils.image_process import combine_coils, extract_complex, gen_complexRI
-from tensorflow.python.keras import Sequential
-from tensorflow.python.keras.models import Input, Model
-from tensorflow.python.keras.layers import Dense, Flatten, InputLayer
-from tensorflow.python.keras.layers.advanced_activations import LeakyReLU
-from tensorflow.python.keras.layers.convolutional import Conv3D
+
+# from tensorflow.python.keras import Sequential
+# from tensorflow.python.keras.models import Input, Model
+# from tensorflow.python.keras.layers import Dense, Flatten, InputLayer
+# from tensorflow.python.keras.layers.advanced_activations import LeakyReLU
+# from tensorflow.python.keras.layers.convolutional import Conv3D
 # from tensorflow.python.keras.layers.normalization import BatchNormalization
+
+from tensorflow.keras import Sequential
+from tensorflow.keras import Input, Model
+from tensorflow.keras.layers import Dense, Flatten, InputLayer
+from tensorflow.keras.layers import LeakyReLU
+from tensorflow.keras.layers import Conv3D
 from tensorflow.keras.layers import BatchNormalization
 
 class CC_layer(tf.keras.layers.Layer):
@@ -60,7 +67,8 @@ class get_discriminator(object):
         if config.channel_opt == 'ALL':
             if config.complex_flag:
                 # CSM-based coil combination
-                ccInput = [Input(shape=config.img_shape,dtype=tf.float32,name="MultichannelImage"),Input(shape=self.config.csm_shape,dtype=tf.complex64,name="CSMs")]
+                ccInput = [Input(shape=config.img_shape,dtype=tf.float32,name="MultichannelImage"),\
+                           Input(shape=self.config.csm_shape,dtype=tf.complex64,name="CSMs")]
                 ccOutput = CC_layer(coil_dim=4,CSM_flag=True)(ccInput)
             elif not config.complex_flag:
                 # RSS coil combination
