@@ -35,7 +35,7 @@ class data(object):
         # Model variation
         typeSplit = model_type.split('_')
         if typeSplit[-1] == 'complex':
-            self.complex_flag = True # complex input, represented in real netword as two input channels
+            self.complex_flag = True # complex input, represented in real network as two input channels
             typeSplit = typeSplit[:-1]
         else:
             self.complex_flag = False
@@ -59,7 +59,7 @@ class data(object):
         self.img_shape = [xdim,ydim,n_slices,n_channels*(self.complex_flag + 1)]
         self.img_shape_combined = [xdim,ydim,n_slices,self.complex_flag + 1]
         self.fraction = 1 # [0,1] can be used to limit datasets for debugging/testing
-        self.contrast = 'ALL' # use 'T2', 'T1', or 'FLAIR' to limit to specific contrast
+        self.contrast = 'T1' # use 'T2', 'T1', or 'FLAIR' to limit to specific contrast, else use 'ALL'
 
 class training(object):
     # Configure optimization/training info
