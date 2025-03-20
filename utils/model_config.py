@@ -55,7 +55,7 @@ class data(object):
             self.channel_opt = 'ALL'
             n_channels = 28
         
-        self.ch_per_im = 'ALL' # can select 1 to limit training to 1 channel per image
+        self.ch_per_im = 1 # can select 1 to limit training to 1 channel per image, else use 'ALL'
         self.img_shape = [xdim,ydim,n_slices,n_channels*(self.complex_flag + 1)]
         self.img_shape_combined = [xdim,ydim,n_slices,self.complex_flag + 1]
         self.fraction = 1 # [0,1] can be used to limit datasets for debugging/testing
