@@ -6,6 +6,22 @@ from utils.cgan_ops import cGAN
 from utils.dataset_prep import prepare_train_data
 from utils.model_config import Config
 
+#-------------------------------------------------------------------------------
+# Limit Tensorflow GPU usage
+import os
+import tensorflow as tf
+from tensorflow.python.keras.backend import set_session
+
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
+#limit GPU memory usage
+config = tf.compat.v1.ConfigProto(gpu_options = tf.compat.v1.GPUOptions(allow_growth=True))
+set_session(tf.compat.v1.Session(config=config))
+
+
+#-------------------------------------------------------------------------------
 # Options
 model_type = 'cGAN_complex' # 'cGAN_complex' (performs motion correction on complex coil-combined data)
                                           # 'cGAN_singlechannel_complex' (performes motion correction on each complex channel independantly)
@@ -28,7 +44,7 @@ validation_data = prepare_train_data(config,'validation')
 # Configure model
 model = cGAN(config)
 
-if config.load.opt:
+if config.load.opt: #i.e., if loading pre-trained model
     if model_type ==  'cGAN_complex':
         config.load.checkpoint = '73'
     elif model_type == 'cGAN_singlechannel_complex':
