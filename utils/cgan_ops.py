@@ -89,7 +89,7 @@ class cGAN(object):
             # Print losses
             for ix, loss in enumerate(config.loss_names):
                 self.losses[loss]['training'].append(t_loss[ix].numpy())
-            
+
             # Save checkpoint
             ckpt.n_epoch.assign_add(1)
             save_manager.save()
