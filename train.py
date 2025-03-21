@@ -44,11 +44,22 @@ else:
 
 
 config.load.opt = 0 # load saved models (turn off to train from scratch)
-config.data.dir = r'/home/nghiemb/RMC_repos/MoCo_cGAN/data/training_dataset/slices'
+config.data.dir = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
 
 # Configure model
 model = cGAN(config)
-model.summary() #creates and saves model txt file in current working directory
+# model.summary() #creates and saves model txt file in current working directory
+
+'''
+if config.load.opt:
+    if model_type ==  'cGAN_complex':
+        config.load.checkpoint = '73'
+    elif model_type == 'cGAN_singlechannel_complex':
+        config.load.checkpoint = '64'
+    elif model_type == 'cGAN_multichannel_complex':
+        config.load.checkpoint = '47'  
+    config.training.num_epochs = int(config.load.checkpoint) - 1 # skip training and stick with saved model
+'''
 
 #-------------------------------------------------------------------------------
 # # LOADING DATA
