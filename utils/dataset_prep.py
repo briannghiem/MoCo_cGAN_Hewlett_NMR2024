@@ -132,9 +132,9 @@ class DataSet(object):
         images_motion = tf.cast(data.get('ImageMotionArray'),dtype=tf.float32) #retrieve magnitude of sample
         images_corrected = tf.cast(data.get('ImageArray'),dtype=tf.float32) #retrieve magnitude of label
         
-        # Normalize (performed on magnitude component)
-        images_motion,_,_ = image_normalize(images_motion)
-        images_corrected,_,_ = image_normalize(images_corrected)
+        # # Normalize (performed on magnitude component)
+        # images_motion,_,_ = image_normalize(images_motion) #### skipping, since all volumes were already normalized
+        # images_corrected,_,_ = image_normalize(images_corrected) #### skipping, since all volumes were already normalized
         
         # Check for phase data
         if 'ImageArrayPHASE' in data:
