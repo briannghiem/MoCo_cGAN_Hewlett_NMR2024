@@ -16,9 +16,9 @@ def prepare_train_data(config,datatype):
         # Load the training/validation data        
         image_files = os.listdir(os.path.join(config.data.dir,datatype)) #get all image paths
                 
-        # Remove additional contrasts if not wanted
-        if not config.data.contrast == 'ALL':
-            filelist_editor(image_files,'include','prefix','file_brain_AX' + config.data.contrast)
+        # # Remove additional contrasts if not wanted
+        # if not config.data.contrast == 'ALL':
+        #     filelist_editor(image_files,'include','prefix','file_brain_AX' + config.data.contrast)
                 
         # Remove additional samples if requested
         if not config.data.fraction == 1:
