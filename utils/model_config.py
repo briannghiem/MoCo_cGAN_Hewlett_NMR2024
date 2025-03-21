@@ -68,8 +68,8 @@ class data(object):
 class training(object):
     # Configure optimization/training info
     def __init__(self,model_type):
-        self.num_epochs = 999
-        self.learning_rate = 5e-5
+        self.num_epochs = 100
+        self.learning_rate = 5e-5 #default param stated in Hewlett et al
         
         # Set batch size
         if model_type == 'cGAN_multichannel' or model_type == 'cGAN_multichannel_complex':
