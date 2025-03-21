@@ -262,7 +262,7 @@ class cGAN(object):
         for batch_data in dataset:
             tf.print('Batch Number',batch + 1)
             
-            d_loss_per_rep, t_loss_per_rep, g_loss_per_rep, gd_loss_per_rep = self.config.strategy.experimental_run_v2(self.train_step,args=batch_data)
+            d_loss_per_rep, t_loss_per_rep, g_loss_per_rep, gd_loss_per_rep = self.config.strategy.run(self.train_step,args=batch_data)
             
             d_loss_combined = self.config.strategy.reduce(tf.distribute.ReduceOp.SUM,d_loss_per_rep,axis=None)
             t_loss_combined = self.config.strategy.reduce(tf.distribute.ReduceOp.SUM,t_loss_per_rep,axis=None)
