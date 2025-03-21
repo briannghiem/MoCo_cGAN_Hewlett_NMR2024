@@ -216,7 +216,7 @@ class cGAN(object):
 
     def data_reset(self,data):
         def data_generator():
-            for sample in tf.range(self.data.count):
+            for sample in tf.range(self.data.count): #iterating through all samples
                 # Load generator data
                 sample_idx = self.data.idxs[sample]
                 sample_file = self.data.file_identifier[sample_idx]
@@ -256,7 +256,7 @@ class cGAN(object):
         return dataset
 
     @tf.function
-    def distributed_train_step(self,dataset):
+    def distributed_train_step(self,dataset): #distributed across multiple devices
         batch = 0
         total_losses = tf.zeros([4],tf.float32)
         for batch_data in dataset:
@@ -319,7 +319,7 @@ class cGAN(object):
     def compute_cgan_loss(self,g_ground_truth, g_prediction, gd_ground_truth, gd_prediction):
         g_ground_truth = tf.expand_dims(g_ground_truth,axis=-1)
         g_prediction = tf.expand_dims(g_prediction,axis=-1)
-        g_ae_loss_per_sample = self.config.cGAN.loss_func_g(g_ground_truth,g_prediction)
+        g_ae_loss_per_sample = self.config.cGAN.loss_func_g(g_ground_truth,g_prediction) #compute MAE loss
         g_mae_loss_per_sample = tf.math.reduce_mean(g_ae_loss_per_sample, axis=4)
         g_mae_loss_per_sample = tf.math.reduce_mean(g_mae_loss_per_sample, axis=3)
         g_mae_loss_per_sample = tf.math.reduce_mean(g_mae_loss_per_sample, axis=2)
@@ -327,7 +327,7 @@ class cGAN(object):
         g_loss_combined = tf.nn.compute_average_loss(g_mae_loss_per_sample,
                                                      global_batch_size=self.config.training.batch_size)
         
-        gd_loss_per_sample = self.config.cGAN.loss_func_d(gd_ground_truth,gd_prediction)
+        gd_loss_per_sample = self.config.cGAN.loss_func_d(gd_ground_truth,gd_prediction) #compute Binary Cross-Entropy
         gd_loss_combined = tf.nn.compute_average_loss(gd_loss_per_sample,
                                                       global_batch_size=self.config.training.batch_size)
         

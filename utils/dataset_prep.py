@@ -14,7 +14,7 @@ from utils.image_process import combine_coils, extract_complex, gen_complex, ima
 def prepare_train_data(config,datatype):
     with config.strategy.scope():
         # Load the training/validation data        
-        image_files = os.listdir(os.path.join(config.data.dir,datatype))
+        image_files = os.listdir(os.path.join(config.data.dir,datatype)) #get all image paths
                 
         # Remove additional contrasts if not wanted
         if not config.data.contrast == 'ALL':
@@ -129,8 +129,8 @@ class DataSet(object):
         path = os.path.join(self.dir,file)
         
         data = np.load(path,allow_pickle=True).item()
-        images_motion = tf.cast(data.get('ImageMotionArray'),dtype=tf.float32) 
-        images_corrected = tf.cast(data.get('ImageArray'),dtype=tf.float32)
+        images_motion = tf.cast(data.get('ImageMotionArray'),dtype=tf.float32) #retrieve magnitude of sample
+        images_corrected = tf.cast(data.get('ImageArray'),dtype=tf.float32) #retrieve magnitude of label
         
         # Normalize (performed on magnitude component)
         images_motion,_,_ = image_normalize(images_motion)

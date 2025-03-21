@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow.keras.losses import BinaryCrossentropy, MeanAbsoluteError, Reduction
 
 class Config(object):
-    def __init__(self,model_type,dataset='fast_MRI_NYU',depth=3,filters=[512,256,128,64]):
+    def __init__(self,model_type,dataset='CC',depth=3,filters=[512,256,128,64]):
         # Define save directory
         origin = os.getcwd()
 
@@ -18,7 +18,8 @@ class Config(object):
                            'cGAN generator loss','cGAN discriminator loss']
         
         # Data info
-        self.data = data(origin,dataset,model_type)        
+        data_path = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
+        self.data = data(data_path,dataset,model_type)        
         
         # Configure parameters
         self.training = training(model_type)        
@@ -55,6 +56,9 @@ class data(object):
             self.channel_opt = 'ALL'
             n_channels = 28
         
+        self.dir = origin
+        self.dataset_name = dataset
+        #
         self.ch_per_im = 1 # can select 1 to limit training to 1 channel per image, else use 'ALL'
         self.img_shape = [xdim,ydim,n_slices,n_channels*(self.complex_flag + 1)]
         self.img_shape_combined = [xdim,ydim,n_slices,self.complex_flag + 1]
