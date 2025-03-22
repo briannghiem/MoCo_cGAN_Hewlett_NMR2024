@@ -12,7 +12,6 @@ from utils.image_process import combine_coils, gen_complexRI, image_pad
 
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras import Input, Model
-from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint, LearningRateScheduler, ReduceLROnPlateau
 
 class cGAN(object):
     #---------------------------------------------------------------
@@ -82,9 +81,10 @@ class cGAN(object):
         tf.print('Training networks ...')
         for epoch in range(epoch_start,config.training.num_epochs): # loop through epochs
             #
+            #------------------------------
             #Training
             with config.strategy.scope():
-                tf.print('Epoch {}'.format(epoch + 1)) 
+                tf.print('Epoch {} - Training'.format(epoch + 1)) 
                 #
                 t_data = self.data_reset(train_data)        
                 t_loss = self.distributed_train_step(t_data)        
@@ -93,13 +93,25 @@ class cGAN(object):
             for ix, loss in enumerate(config.loss_names):
                 self.losses[loss]['training'].append(t_loss[ix].numpy())
             #
+            #------------------------------
             #Validation 
-            ############################################################################
+            with config.strategy.scope():
+                tf.print('Epoch {} - Validation'.format(epoch + 1)) 
+                #
+                v_data = self.data_reset(val_data)        
+                v_loss = self.distributed_val_step(v_data)        
+            #
+            # Print losses
+            for ix, loss in enumerate(config.loss_names):
+                self.losses[loss]['validation'].append(v_loss[ix].numpy())
             #
             # Save checkpoint
             ckpt.n_epoch.assign_add(1)
             save_manager.save()
-            tf.print('Checkpoint saved')                
+            tf.print('Checkpoint saved')    
+            # Save losses
+            spath_loss_temp = os.path.join(self.config.save_dir,'checkpoints','loss.npy')
+            np.save(spath_loss_temp, self.losses)
     #
     def configure(self):
         self.reset_states()
@@ -109,7 +121,7 @@ class cGAN(object):
                        self.config.loss_names[1]: {'training': [],'validation': []},
                        self.config.loss_names[2]: {'training': [],'validation': []},
                        self.config.loss_names[3]: {'training': [],'validation': []},
-                       }
+                       } #{'Discriminator loss', 'cGAN total loss', 'cGAN generator loss', 'cGAN discriminator loss'}
         with self.config.strategy.scope():        
             ckpt = tf.train.Checkpoint(n_epoch = epoch_start,
                                        discriminator = self.discriminator,
