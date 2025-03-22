@@ -82,27 +82,19 @@ class cGAN(object):
         for epoch in range(epoch_start,config.training.num_epochs): # loop through epochs
             #
             #------------------------------
-            #Training
+            #Training & Validation
             with config.strategy.scope():
                 tf.print('Epoch {} - Training'.format(epoch + 1)) 
-                #
                 t_data = self.data_reset(train_data)        
-                t_loss = self.distributed_train_step(t_data)        
-            #
-            # Print losses
-            for ix, loss in enumerate(config.loss_names):
-                self.losses[loss]['training'].append(t_loss[ix].numpy())
-            #
-            #------------------------------
-            #Validation 
-            with config.strategy.scope():
-                tf.print('Epoch {} - Validation'.format(epoch + 1)) 
+                t_loss = self.distributed_train_step(t_data)  
                 #
-                v_data = self.data_reset(val_data)        
+                tf.print('Epoch {} - Validation'.format(epoch + 1)) 
+                v_data = self.data_reset(val_data)    
                 v_loss = self.distributed_val_step(v_data)        
             #
             # Print losses
             for ix, loss in enumerate(config.loss_names):
+                self.losses[loss]['training'].append(t_loss[ix].numpy())
                 self.losses[loss]['validation'].append(v_loss[ix].numpy())
             #
             # Save checkpoint
