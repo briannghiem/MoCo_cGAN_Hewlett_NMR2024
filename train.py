@@ -71,8 +71,8 @@ validation_data = prepare_train_data(config,'validation')
 # # TRAINING
 model.train(train_data=train_data)
 
-# Sample output
-model.sample_output(validation_data,'Validation Example',config.training.num_epochs)
+# # Sample output
+# model.sample_output(validation_data,'Validation Example',config.training.num_epochs)
 
 
 
@@ -100,3 +100,4 @@ def plot_views(img, vmax = 1.0):
     plt.show()
 
 '''
+
