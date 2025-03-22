@@ -302,10 +302,10 @@ class cGAN(object):
             #
             d_loss_per_rep, t_loss_per_rep, g_loss_per_rep, gd_loss_per_rep = self.config.strategy.run(self.val_step,args=batch_data)
             #
-            d_loss_combined = None
-            t_loss_combined = None
+            d_loss_combined = self.config.strategy.reduce(tf.distribute.ReduceOp.SUM,d_loss_per_rep,axis=None)
+            t_loss_combined = self.config.strategy.reduce(tf.distribute.ReduceOp.SUM,t_loss_per_rep,axis=None)
             g_loss_combined = self.config.strategy.reduce(tf.distribute.ReduceOp.SUM,g_loss_per_rep,axis=None)
-            gd_loss_combined = None
+            gd_loss_combined = self.config.strategy.reduce(tf.distribute.ReduceOp.SUM,gd_loss_per_rep,axis=None)
             #
             total_losses += tf.stack([d_loss_combined,t_loss_combined,g_loss_combined,gd_loss_combined])
             #
@@ -314,9 +314,9 @@ class cGAN(object):
         return total_losses / tf.cast(batch, dtype=tf.float32)
     #
     def val_step(self,g_input,g_output,gd_output,d_input,d_output,csms=[]):        
-        d_loss = None
         t_loss, g_loss, gd_loss = self.val_generator(g_input, g_output, gd_output,csms)
         #
+        d_loss = t_loss #place-holder!!
         return d_loss, t_loss, g_loss, gd_loss #only need g_loss; the others pertain to discriminator, which is not evaluated at validation step 
     #
     def val_generator(self,g_input,g_output,gd_output,csms=[]):
@@ -325,7 +325,6 @@ class cGAN(object):
                 g_prediction, gd_prediction = self.cgan([g_input,csms], training=False)
             else:
                 g_prediction, gd_prediction = self.cgan(g_input, training=False) #will ignore discriminator output during validation step
-                # g_prediction = self.generator(tf.expand_dims(img_motion, axis=0), training=False)
             #
             t_loss, g_loss, gd_loss = self.compute_cgan_loss_val(g_output, g_prediction, gd_output, gd_prediction)
         #
@@ -333,6 +332,7 @@ class cGAN(object):
     #
     def compute_cgan_loss_val(self,g_ground_truth, g_prediction, gd_ground_truth, gd_prediction):
         #Computing only MAE loss during validation, since only evaluating the generator
+        #the Cross-Entropy loss will be ignored
         g_ground_truth = tf.expand_dims(g_ground_truth,axis=-1)
         g_prediction = tf.expand_dims(g_prediction,axis=-1)
         g_ae_loss_per_sample = self.config.cGAN.loss_func_g(g_ground_truth,g_prediction) #compute MAE loss
@@ -343,8 +343,13 @@ class cGAN(object):
         g_loss_combined = tf.nn.compute_average_loss(g_mae_loss_per_sample,
                                                      global_batch_size=self.config.training.batch_size)
         #
-        gd_loss_combined = None
-        t_loss_combined = None
+        gd_loss_per_sample = self.config.cGAN.loss_func_d(gd_ground_truth,gd_prediction) #compute Binary Cross-Entropy
+        gd_loss_combined = tf.nn.compute_average_loss(gd_loss_per_sample,
+                                                      global_batch_size=self.config.training.batch_size)
+        #
+        weight_g = self.config.cGAN.loss_weights[0]
+        weight_d = self.config.cGAN.loss_weights[1]
+        t_loss_combined = tf.math.add(weight_g*g_loss_combined,weight_d*gd_loss_combined)
         #
         return t_loss_combined, g_loss_combined, gd_loss_combined
     
