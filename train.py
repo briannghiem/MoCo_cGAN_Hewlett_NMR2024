@@ -101,3 +101,61 @@ def plot_views(img, vmax = 1.0):
 
 '''
 
+'''
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+
+#-------------------------------
+#Helper functions
+def get_ymax(train_array, val_array):
+    ymax_init = np.max((train_array[0], val_array[0]))
+    ymax = 10**(math.ceil(math.log(ymax_init, 10)))
+    return ymax
+
+def get_ymin(train_array, val_array):
+    ymin_init = np.min((train_array[-1], val_array[-1]))
+    ymin = 10**(math.floor(math.log(ymin_init, 10)))
+    return ymin
+
+def get_curves(train_array, val_array, y_axis_title, ylims = 'default'):
+    epoch_array = np.arange(1,len(train_array)+1)
+    if ylims == 'default':
+        ymin = np.min((min(train_array), min(val_array)))
+        ymax = np.max((max(train_array), max(val_array)))
+    elif ylims == 'cropped':
+        ymin = get_ymin(train_array, val_array)
+        ymax = get_ymax(train_array, val_array)
+    else:
+        ymin = ylims[0]
+        ymax = ylims[1]
+    #
+    plt.figure()
+    plt.plot(epoch_array, train_array, label = "training")
+    plt.plot(epoch_array, val_array, label = "validation")
+    plt.xlabel("Epoch")
+    plt.ylabel(y_axis_title)
+    plt.title("cGAN - Loss Curves; {}".format(y_axis_title))
+    plt.ylim(ymin, ymax)
+    plt.show()
+
+#-------------------------------
+mpath = r'/home/nghiemb/RMC_repos/MoCo_cGAN_Hewlett_NMR2024'
+spath = mpath + r'/savedModels/cGAN_complex/checkpoints'
+loss = np.load(spath + r'/loss.npy', allow_pickle=1).item() #recover dictionary from 0-array
+
+keys = list(loss.keys())
+
+#-------------------------------
+#Mean Absolute Error
+MAE_train = loss[keys[-2]]['training']
+MAE_val = loss[keys[-2]]['validation']
+
+get_curves(MAE_train, MAE_val, 'MAE', ylims = 'default')
+
+#Binary Cross Entropy
+cGAN_CE_train = loss[keys[-1]]['training'] #cross entropy
+cGAN_CE_val = loss[keys[-1]]['validation'] #cross entropy
+
+get_curves(cGAN_CE_train, cGAN_CE_val, 'Cross Entropy', ylims = 'default')
+'''
