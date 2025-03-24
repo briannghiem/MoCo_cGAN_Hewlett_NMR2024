@@ -42,13 +42,8 @@ if model_type[0:17] == 'cGAN_multichannel':
 else:
     config = Config(model_type)
 
-
 config.load.opt = 0 # load saved models (turn off to train from scratch)
 config.data.dir = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
-
-# Configure model
-model = cGAN(config)
-# model.summary() #creates and saves model txt file in current working directory
 
 '''
 if config.load.opt:
@@ -60,6 +55,10 @@ if config.load.opt:
         config.load.checkpoint = '47'  
     config.training.num_epochs = int(config.load.checkpoint) - 1 # skip training and stick with saved model
 '''
+
+# Configure model
+model = cGAN(config)
+# model.summary() #creates and saves model txt file in current working directory
 
 #-------------------------------------------------------------------------------
 # # LOADING DATA
@@ -73,7 +72,6 @@ model.train(train_data=train_data, val_data=validation_data)
 
 # # Sample output
 # model.sample_output(validation_data,'Validation Example',config.training.num_epochs)
-
 
 
 '''
@@ -157,5 +155,7 @@ get_curves(MAE_train, MAE_val, 'MAE', ylims = 'default')
 cGAN_CE_train = loss[keys[-1]]['training'] #cross entropy
 cGAN_CE_val = loss[keys[-1]]['validation'] #cross entropy
 
-get_curves(cGAN_CE_train, cGAN_CE_val, 'Cross Entropy', ylims = 'default')
+get_curves(np.log(cGAN_CE_train), np.log(cGAN_CE_val), 'Cross Entropy - Log_e plot', ylims = 'default')
+# get_curves(np.log(cGAN_CE_train)/np.log(10), np.log(cGAN_CE_val)/np.log(10), 'Cross Entropy - Log_10 plot', ylims = 'default')
+
 '''
