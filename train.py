@@ -155,7 +155,8 @@ get_curves(MAE_train, MAE_val, 'MAE', ylims = 'default')
 cGAN_CE_train = loss[keys[-1]]['training'] #cross entropy
 cGAN_CE_val = loss[keys[-1]]['validation'] #cross entropy
 
+get_curves(cGAN_CE_train, cGAN_CE_val, 'Cross Entropy', ylims = 'default')
 get_curves(np.log(cGAN_CE_train), np.log(cGAN_CE_val), 'Cross Entropy - Log_e plot', ylims = 'default')
-# get_curves(np.log(cGAN_CE_train)/np.log(10), np.log(cGAN_CE_val)/np.log(10), 'Cross Entropy - Log_10 plot', ylims = 'default')
+get_curves(np.log(cGAN_CE_train)/np.log(10), np.log(cGAN_CE_val)/np.log(10), 'Cross Entropy - Log_10 plot', ylims = 'default')
 
 '''
