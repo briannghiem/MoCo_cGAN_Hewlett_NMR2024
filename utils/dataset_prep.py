@@ -201,8 +201,11 @@ class DataSet(object):
         # Get desired channel
         if channel == 'COMBINED':
             # Combine channels
-            images_corrected, img_min, img_max = combine_coils(images_corrected,[],CSMsConj=CSMconj)
-            images_motion,_,_ = combine_coils(images_motion,[img_min, img_max],CSMsConj=CSMconj)
+            # images_corrected, img_min, img_max = combine_coils(images_corrected,[],CSMsConj=CSMconj)
+            # images_motion,_,_ = combine_coils(images_motion,[img_min, img_max],CSMsConj=CSMconj)
+            # TEMPORARY PATCH - SKIPPING COIL COMBINATION
+            images_motion = images_motion
+            images_corrected = images_corrected   
         elif channel == 'SINGLE':
             # Return images as is
             images_motion = images_motion
