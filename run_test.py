@@ -94,4 +94,9 @@ def plot_views(img, vmax = 1.0):
         #
     plt.show()
 
+temp = img_motion.numpy()
+temp2 = temp[..., 0] + 1j*temp[..., 1]
+print("vmax: {}".format(abs(temp2.flatten()).max()))
+plot_views(np.abs(temp2))
+
 '''
