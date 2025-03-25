@@ -61,6 +61,21 @@ def prepare_train_data(config,datatype):
     #
     return dataset
 
+def prepare_test_data(config,test_folder,datatype='testing'):
+    with config.strategy.scope():
+        # Load test dataset from provided folder 
+        image_files = sorted(test_folder, key = natural_keys) #sort alphanumerical order  
+        dataset = DataSet(image_files,
+                            datatype,
+                            config)
+        #
+        dataset.datatype = datatype
+    #
+    print("Dataset built")
+    time.sleep(1)
+    #
+    return dataset
+
 def filelist_editor(filelist,option,location,text):
     """
     This function will remove files from a list based on a prefix or suffix.
