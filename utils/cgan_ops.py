@@ -360,6 +360,7 @@ class cGAN(object):
         corrupted_store = []
         corrected_store = []
         for slab in range(len(dataset.file_identifier)):
+            print("Processing Slab {}".format(slab+1))
             file = dataset.file_identifier[slab]
             channel = dataset.channel_identifier[slab]
             #
