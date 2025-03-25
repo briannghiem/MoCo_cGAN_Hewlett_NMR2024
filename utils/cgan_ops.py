@@ -352,56 +352,63 @@ class cGAN(object):
         t_loss_combined = tf.math.add(weight_g*g_loss_combined,weight_d*gd_loss_combined)
         #
         return t_loss_combined, g_loss_combined, gd_loss_combined
-    
-    # #---------------------------------------------------------------
-    # def sample_output(self,dataset,title,epoch):
-    #     # Get random sample
-    #     ix = np.random.choice(dataset.idxs)
-    #     file = dataset.file_identifier[ix]
-    #     channel = dataset.channel_identifier[ix]
-        
-    #     # Load data
-    #     img_motion, img_true, CSMs = dataset.load(file,channel)
-        
-    #     # Get predicted image
-    #     img_corrected = self.generator(tf.expand_dims(img_motion, axis=0), training=False)
-    #     img_corrected = tf.squeeze(img_corrected,axis=0)
-        
-    #     if dataset.complex_flag:
-    #         # Convert to complex representation
-    #         img_true = gen_complexRI(img_true,coil_dim=3)
-    #         img_motion = gen_complexRI(img_motion,coil_dim=3)
-    #         img_corrected = gen_complexRI(img_corrected,coil_dim=3)
-        
-    #     # Perform coil combination for multichannel network, cropping unnecessary channels
-    #     if self.config.data.channel_opt == 'ALL':
-    #         # Crop unnecessary channels
-    #         if dataset.complex_flag:
-    #             CSMs = CSMs[:,:,:,0:dataset.n_channels[ix]]
-    #         else:
-    #             CSMs = []
-    #         img_true,_,_ = combine_coils(img_true[:,:,:,0:dataset.n_channels[ix]],-1,coil_dim=3,CSMsConj=CSMs)
-    #         img_motion,_,_ = combine_coils(img_motion[:,:,:,0:dataset.n_channels[ix]],-1,coil_dim=3,CSMsConj=CSMs)
-    #         img_corrected,_,_ = combine_coils(img_corrected[:,:,:,0:dataset.n_channels[ix]],-1,coil_dim=3,CSMsConj=CSMs)            
-            
-    #     # Plot
-    #     self.plot_sample(img_true,img_motion,img_corrected,title,epoch,im_range=[0,1])               
-
+    #
+    #---------------------------------------------------------------
+    def eval_test(self,dataset,title,epoch):
+        # Loading folder
+        groundtruth_store = []
+        corrupted_store = []
+        corrected_store = []
+        for slab in range(len(dataset.file_identifier)):
+            file = dataset.file_identifier[slab]
+            channel = dataset.channel_identifier[slab]
+            #
+            # Load data
+            img_motion, img_true, CSMs = dataset.load(file,channel)
+            #
+            # Get predicted image
+            img_corrected = self.generator(tf.expand_dims(img_motion, axis=0), training=False)
+            img_corrected = tf.squeeze(img_corrected,axis=0)
+            #
+            if dataset.complex_flag:
+                # Convert to complex representation
+                img_true = gen_complexRI(img_true,coil_dim=3)
+                img_motion = gen_complexRI(img_motion,coil_dim=3)
+                img_corrected = gen_complexRI(img_corrected,coil_dim=3)
+            #
+            # Perform coil combination for multichannel network, cropping unnecessary channels
+            if self.config.data.channel_opt == 'ALL':
+                # Crop unnecessary channels
+                if dataset.complex_flag:
+                    CSMs = CSMs[:,:,:,0:dataset.n_channels[slab]]
+                else:
+                    CSMs = []
+                img_true,_,_ = combine_coils(img_true[:,:,:,0:dataset.n_channels[slab]],-1,coil_dim=3,CSMsConj=CSMs)
+                img_motion,_,_ = combine_coils(img_motion[:,:,:,0:dataset.n_channels[slab]],-1,coil_dim=3,CSMsConj=CSMs)
+                img_corrected,_,_ = combine_coils(img_corrected[:,:,:,0:dataset.n_channels[slab]],-1,coil_dim=3,CSMsConj=CSMs)            
+            #
+            # Plot
+            # self.plot_sample(img_true,img_motion,img_corrected,title,epoch,im_range=[0,1])   
+            groundtruth_store.append(img_true) 
+            corrupted_store.append(img_motion) 
+            corrected_store.append(img_corrected) 
+            return groundtruth_store, corrupted_store, corrected_store           
+    #
     # def plot_sample(self,img_true,img_motion,img_corrected,title,epoch,im_range=[-1.5,3.5],er_range=[0,1],slc=3):
-        
+    #     #
     #     # For complex data take magnitude
     #     if img_motion.dtype == tf.complex64:
     #         if tf.is_tensor(img_true):
     #             img_true = tf.math.abs(img_true)
     #         img_motion = tf.math.abs(img_motion)
     #         img_corrected = tf.math.abs(img_corrected)        
-        
+    #     #
     #     # Set reference for difference images
     #     if tf.is_tensor(img_true):
     #         img_ref = img_true
     #     else:
     #         img_ref = img_motion        
-        
+    #     #
     #     # Get channel to plot
     #     img_motion = image_pad(np.array(img_motion)[:,:,:,0])
     #     img_corrected = image_pad(np.array(img_corrected)[:,:,:,0])
@@ -410,7 +417,7 @@ class cGAN(object):
     #         img_true = image_pad(np.array(img_true)[:,:,:,0])
     #     else:
     #         img_true = np.zeros(img_motion.shape)        
-        
+    #     #
     #     # Plot
     #     fig, ax = plt.subplots(2, 3, figsize = (20,15), dpi = 300)
     #     ax[0,0].imshow(img_true[:,:,slc], cmap='gray', vmin=im_range[0], vmax=im_range[1])
@@ -427,5 +434,5 @@ class cGAN(object):
     #     ax[0,2].set_title('Original')
     #     ax[1,2].imshow(np.abs(img_motion[:,:,slc] - img_ref[:,:,slc]), cmap='gray', vmin=er_range[0], vmax=er_range[1])
     #     ax[1,2].axis('off')        
-        
+    #     #
     #     plt.show()
