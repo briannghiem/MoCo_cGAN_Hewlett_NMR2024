@@ -20,10 +20,10 @@ dpath = mpath + r'/data/training_dataset/slices'
 spath = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024' #
 
 #Loading complex-valued data
-train_labels = np.load(dpath + r'/train/train_GT.npy')
+train_labels = np.load(dpath + r'/train/train_GT.npy') #dim: [3072,8,192,224,2]
 train_corr = np.load(dpath + r'/train/train_corr.npy') #corr for corrupted
 
-val_labels = np.load(dpath + r'/val/val_GT.npy')
+val_labels = np.load(dpath + r'/val/val_GT.npy') #dim: [768,8,192,224,2]
 val_corr = np.load(dpath + r'/val/val_corr.npy') #corr for corrupted
 
 #Transpose data to align with Johnson & Drangova's convention
