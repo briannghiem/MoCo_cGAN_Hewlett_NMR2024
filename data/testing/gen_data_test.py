@@ -41,8 +41,8 @@ def image_transform(image, target_shape, slab_size):
 
 def make_dict(m_corrupted, m_GT, keys):
     dict_temp = {keys[0]:np.abs(m_corrupted[..., None]),\
-                    keys[1]:np.angle(m_GT[..., None]),\
-                    keys[2]:np.abs(m_corrupted[..., None]),\
+                    keys[1]:np.abs(m_GT[..., None]),\
+                    keys[2]:np.angle(m_corrupted[..., None]),\
                     keys[3]:np.angle(m_GT[..., None])}
     return dict_temp
 
