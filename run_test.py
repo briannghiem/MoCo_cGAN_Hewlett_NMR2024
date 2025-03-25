@@ -57,9 +57,8 @@ dpath_temp_root = dpath + paradigm + r'/Test{}'.format(sub)
 # Set up datasets
 test_data = prepare_test_data(config, dpath_temp_root)
 
-
-# # Sample output
-# model.sample_output(validation_data,'Validation Example',config.training.num_epochs)
+# Sample output
+model.eval_test(test_data)
 
 
 '''
