@@ -24,6 +24,11 @@ os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 config = tf.compat.v1.ConfigProto(gpu_options = tf.compat.v1.GPUOptions(allow_growth=True))
 set_session(tf.compat.v1.Session(config=config))
 
+#-------------------------------------------------------------------------------
+# HELPER FUNCTIONS
+
+def slab2volume(slabs):
+
 
 #-------------------------------------------------------------------------------
 # SETTING UP MODEL
@@ -49,15 +54,20 @@ dpath = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024/dat
 paradigms = [r'/Paradigm_1C', r'/Paradigm_1D', r'/Paradigm_1E', r'/Paradigm_1F']
 subs = [1,4,5,6,7]
 
-paradigm = paradigms[0]
-sub = subs[0]
+paradigm = paradigms[0] #choose motion level
+sub = subs[0] #choose test subject
 dpath_identifiers = r'/testing' + paradigm + r'/Test{}'.format(sub)
 dpath_temp_root = dpath + paradigm + r'/Test{}'.format(sub)
 
-# Set up datasets
+# Preparing test data
 test_data = prepare_test_data(config, dpath_temp_root, datatype=dpath_temp_root)
-# Sample output
+
+# Evaluate cGAN on test data
+from time import time
+t1 = time()
 groundtruth_store, corrupted_store, corrected_store = model.eval_test(test_data)
+t2 = time()
+print("Elapsed time for 1 volume: {:.2f} sec".format(t2 - t1))
 
 
 '''
@@ -70,7 +80,8 @@ mpl.rcParams['axes.spines.top'] = False
 
 def plot_views(img, vmax = 1.0):
     if vmax == "auto": #if auto, set as max val of volume
-        vmax = abs(img.flatten().detach().cpu()).max()
+        # vmax = abs(img.flatten().detach().cpu()).max()
+        vmax = abs(img.flatten()).max()
     #
     fig, axes = plt.subplots(1,3)
     for i, ax in enumerate(axes):
