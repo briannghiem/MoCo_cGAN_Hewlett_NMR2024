@@ -51,14 +51,13 @@ subs = [1,4,5,6,7]
 
 paradigm = paradigms[0]
 sub = subs[0]
+dpath_identifiers = r'/testing' + paradigm + r'/Test{}'.format(sub)
 dpath_temp_root = dpath + paradigm + r'/Test{}'.format(sub)
 
-
 # Set up datasets
-test_data = prepare_test_data(config, dpath_temp_root)
-
+test_data = prepare_test_data(config, dpath_temp_root, datatype=dpath_temp_root)
 # Sample output
-model.eval_test(test_data)
+groundtruth_store, corrupted_store, corrected_store = model.eval_test(test_data)
 
 
 '''
