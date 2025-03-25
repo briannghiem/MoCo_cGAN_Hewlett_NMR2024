@@ -354,7 +354,7 @@ class cGAN(object):
         return t_loss_combined, g_loss_combined, gd_loss_combined
     #
     #---------------------------------------------------------------
-    def eval_test(self,dataset,title,epoch):
+    def eval_test(self,dataset):
         # Loading folder
         groundtruth_store = []
         corrupted_store = []
