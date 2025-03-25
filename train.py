@@ -45,20 +45,8 @@ else:
 config.load.opt = 0 # load saved models (turn off to train from scratch)
 config.data.dir = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
 
-'''
-if config.load.opt:
-    if model_type ==  'cGAN_complex':
-        config.load.checkpoint = '73'
-    elif model_type == 'cGAN_singlechannel_complex':
-        config.load.checkpoint = '64'
-    elif model_type == 'cGAN_multichannel_complex':
-        config.load.checkpoint = '47'  
-    config.training.num_epochs = int(config.load.checkpoint) - 1 # skip training and stick with saved model
-'''
-
 # Configure model
 model = cGAN(config)
-# model.summary() #creates and saves model txt file in current working directory
 
 #-------------------------------------------------------------------------------
 # # LOADING DATA
@@ -73,33 +61,9 @@ model.train(train_data=train_data, val_data=validation_data)
 # # Sample output
 # model.sample_output(validation_data,'Validation Example',config.training.num_epochs)
 
-
 '''
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+#Check loss curves
 
-mpl.rcParams['axes.spines.right'] = False
-mpl.rcParams['axes.spines.top'] = False
-
-def plot_views(img, vmax = 1.0):
-    if vmax == "auto": #if auto, set as max val of volume
-        vmax = abs(img.flatten().detach().cpu()).max()
-    #
-    fig, axes = plt.subplots(1,3)
-    for i, ax in enumerate(axes):
-        if i==0:
-            ax.imshow(img[img.shape[0]//2,:,:], cmap = "gray", vmax = vmax)
-        if i==1:
-            ax.imshow(img[:,img.shape[1]//2,:], cmap = "gray", vmax = vmax)
-        if i==2:
-            ax.imshow(img[:,:,img.shape[2]//2], cmap = "gray", vmax = vmax)
-        #
-    plt.show()
-
-'''
-
-'''
 import numpy as np
 import math
 import matplotlib.pyplot as plt
