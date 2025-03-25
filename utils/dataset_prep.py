@@ -64,7 +64,8 @@ def prepare_train_data(config,datatype):
 def prepare_test_data(config,test_folder,datatype='testing'):
     with config.strategy.scope():
         # Load test dataset from provided folder 
-        image_files = sorted(test_folder, key = natural_keys) #sort alphanumerical order  
+        fname_temp = os.listdir(test_folder) 
+        image_files = sorted(fname_temp, key = natural_keys) #sort alphanumerical order  
         dataset = DataSet(image_files,
                             datatype,
                             config)
