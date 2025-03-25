@@ -50,8 +50,8 @@ for i in range(n_train):
     train_corr_temp = train_corr[...,0,i] + 1j*train_corr[...,1,i]
     #
     dict_temp = {keys[0]:np.abs(train_corr_temp[..., None]),\
-                    keys[1]:np.angle(train_label_temp[..., None]),\
-                    keys[2]:np.abs(train_corr_temp[..., None]),\
+                    keys[1]:np.abs(train_label_temp[..., None]),\
+                    keys[2]:np.angle(train_corr_temp[..., None]),\
                     keys[3]:np.angle(train_label_temp[..., None])}
     #
     np.save(spath_temp, dict_temp)
@@ -65,8 +65,8 @@ for i in range(n_val):
     val_corr_temp = val_corr[...,0,i] + 1j*val_corr[...,1,i]
     #
     dict_temp = {keys[0]:np.abs(val_corr_temp[..., None]),\
-                    keys[1]:np.angle(val_label_temp[..., None]),\
-                    keys[2]:np.abs(val_corr_temp[..., None]),\
+                    keys[1]:np.abs(val_label_temp[..., None]),\
+                    keys[2]:np.angle(val_corr_temp[..., None]),\
                     keys[3]:np.angle(val_label_temp[..., None])}
     #
     np.save(spath_temp, dict_temp)
