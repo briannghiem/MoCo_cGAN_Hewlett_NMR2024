@@ -28,7 +28,9 @@ set_session(tf.compat.v1.Session(config=config))
 #-------------------------------------------------------------------------------
 # SETTING UP MODEL
 
-model_type = 'cGAN_complex' 
+# model_type = 'cGAN_complex' 
+model_type = 'cGAN' 
+
 '''
 'cGAN_complex' (performs motion correction on complex coil-combined data)
 'cGAN_singlechannel_complex' (performes motion correction on each complex channel independantly)
@@ -120,7 +122,23 @@ cGAN_CE_train = loss[keys[-1]]['training'] #cross entropy
 cGAN_CE_val = loss[keys[-1]]['validation'] #cross entropy
 
 get_curves(cGAN_CE_train, cGAN_CE_val, 'Cross Entropy', ylims = 'default')
-get_curves(np.log(cGAN_CE_train), np.log(cGAN_CE_val), 'Cross Entropy - Log_e plot', ylims = 'default')
 get_curves(np.log(cGAN_CE_train)/np.log(10), np.log(cGAN_CE_val)/np.log(10), 'Cross Entropy - Log_10 plot', ylims = 'default')
+# get_curves(np.log(cGAN_CE_train), np.log(cGAN_CE_val), 'Cross Entropy - Log_e plot', ylims = 'default')
+
+
+#-------------------------------
+#Get best iteration
+
+MAE_train_min_ind = int(np.where(np.array(MAE_train) == np.array(MAE_train).min())[0])
+MAE_val_min_ind = int(np.where(np.array(MAE_val) == np.array(MAE_val).min())[0])
+print("MAE_train minimum of {:.3f} at iteration {}".format(np.array(MAE_train).min(), MAE_train_min_ind))
+print("MAE_val minimum of {:.3f} at iteration {}".format(np.array(MAE_val).min(), MAE_val_min_ind))
+
+cGAN_CE_train_min_ind = int(np.where(np.array(cGAN_CE_train) == np.array(cGAN_CE_train).min())[0])
+cGAN_CE_val_min_ind = int(np.where(np.array(cGAN_CE_val) == np.array(cGAN_CE_val).min())[0])
+print("cAGN_CE_train minimum of {} at iteration {}".format(np.array(cGAN_CE_train).min(), cGAN_CE_train_min_ind))
+print("cGAN_CE_val minimum of {} at iteration {}".format(np.array(cGAN_CE_val).min(), cGAN_CE_val_min_ind))
+
+
 
 '''
