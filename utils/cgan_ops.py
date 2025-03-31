@@ -393,7 +393,7 @@ class cGAN(object):
             groundtruth_store.append(img_true) 
             corrupted_store.append(img_motion) 
             corrected_store.append(img_corrected) 
-            return groundtruth_store, corrupted_store, corrected_store           
+        return groundtruth_store, corrupted_store, corrected_store           
     #
     # def plot_sample(self,img_true,img_motion,img_corrected,title,epoch,im_range=[-1.5,3.5],er_range=[0,1],slc=3):
     #     #
