@@ -19,6 +19,7 @@ from tensorflow.python.keras.backend import set_session
 #limit GPU memory usage
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '' #turn off GPU for debugging
 os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
 
 config = tf.compat.v1.ConfigProto(gpu_options = tf.compat.v1.GPUOptions(allow_growth=True))
@@ -68,7 +69,7 @@ from time import time
 t1 = time()
 groundtruth_store, corrupted_store, corrected_store = model.eval_test(test_data)
 t2 = time()
-print("Elapsed time for 1 volume: {:.2f} sec".format(t2 - t1))
+print("Elapsed time for 1 volume: {:.2f} sec".format(t2 - t1)) #for 32 slabs: 6.2 seconds on GPU, 33.7 seconds on CPU
 
 groundtruth_array = slab2volume(groundtruth_store)
 corrupted_array = slab2volume(corrupted_store)
@@ -78,8 +79,8 @@ plot_views(abs(groundtruth_array))
 plot_views(abs(corrupted_array))
 plot_views(abs(corrected_array))
 
-'''
 
+'''
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
