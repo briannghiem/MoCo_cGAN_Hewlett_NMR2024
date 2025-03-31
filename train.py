@@ -28,8 +28,8 @@ set_session(tf.compat.v1.Session(config=config))
 #-------------------------------------------------------------------------------
 # SETTING UP MODEL
 
-# model_type = 'cGAN_complex' 
-model_type = 'cGAN' 
+model_type = 'cGAN_complex' 
+# model_type = 'cGAN' 
 
 '''
 'cGAN_complex' (performs motion correction on complex coil-combined data)
