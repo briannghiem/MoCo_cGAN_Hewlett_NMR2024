@@ -28,6 +28,7 @@ set_session(tf.compat.v1.Session(config=config))
 # HELPER FUNCTIONS
 
 def slab2volume(slabs):
+    return np.squeeze(tf.concat(slabs, 2).numpy())
 
 
 #-------------------------------------------------------------------------------
@@ -41,7 +42,7 @@ config = Config(model_type)
 config.data.dir = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
 
 config.load.opt = 1 # load saved models
-config.load.checkpoint = '100'
+config.load.checkpoint = '99'
 config.training.num_epochs = int(config.load.checkpoint) - 1 # skip training and stick with saved model
 
 model = cGAN(config)
@@ -69,8 +70,16 @@ groundtruth_store, corrupted_store, corrected_store = model.eval_test(test_data)
 t2 = time()
 print("Elapsed time for 1 volume: {:.2f} sec".format(t2 - t1))
 
+groundtruth_array = slab2volume(groundtruth_store)
+corrupted_array = slab2volume(corrupted_store)
+corrected_array = slab2volume(corrected_store)
+
+plot_views(abs(groundtruth_array))
+plot_views(abs(corrupted_array))
+plot_views(abs(corrected_array))
 
 '''
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -94,9 +103,14 @@ def plot_views(img, vmax = 1.0):
         #
     plt.show()
 
-temp = img_motion.numpy()
-temp2 = temp[..., 0] + 1j*temp[..., 1]
-print("vmax: {}".format(abs(temp2.flatten()).max()))
-plot_views(np.abs(temp2))
+ind_slab = 16
+temp_GT = groundtruth_store[ind_slab].numpy()
+temp_corrupted = corrupted_store[ind_slab].numpy()
+temp_output = corrected_store[ind_slab].numpy()
+
+plot_views(np.abs(temp_GT))
+plot_views(np.abs(temp_corrupted))
+
+plot_views(np.abs(temp_output))
 
 '''
