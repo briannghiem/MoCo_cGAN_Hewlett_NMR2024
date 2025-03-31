@@ -105,7 +105,9 @@ def get_curves(train_array, val_array, y_axis_title, ylims = 'default'):
 
 #-------------------------------
 mpath = r'/home/nghiemb/RMC_repos/MoCo_cGAN_Hewlett_NMR2024'
-spath = mpath + r'/savedModels/cGAN_complex/checkpoints'
+# spath = mpath + r'/savedModels/cGAN_complex/checkpoints'
+spath = mpath + r'/savedModels/cGAN/checkpoints'
+
 loss = np.load(spath + r'/loss.npy', allow_pickle=1).item() #recover dictionary from 0-array
 
 keys = list(loss.keys())
@@ -138,7 +140,5 @@ cGAN_CE_train_min_ind = int(np.where(np.array(cGAN_CE_train) == np.array(cGAN_CE
 cGAN_CE_val_min_ind = int(np.where(np.array(cGAN_CE_val) == np.array(cGAN_CE_val).min())[0])
 print("cAGN_CE_train minimum of {} at iteration {}".format(np.array(cGAN_CE_train).min(), cGAN_CE_train_min_ind))
 print("cGAN_CE_val minimum of {} at iteration {}".format(np.array(cGAN_CE_val).min(), cGAN_CE_val_min_ind))
-
-
 
 '''
