@@ -44,8 +44,16 @@ if model_type[0:17] == 'cGAN_multichannel':
 else:
     config = Config(model_type)
 
-config.load.opt = 0 # load saved models (turn off to train from scratch)
 config.data.dir = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
+
+
+
+training_continue = 1 #flag for continue training from checkpoint
+if training_continue:
+    config.load.checkpoint = '39'
+else:
+    config.load.opt = 0 # load saved models (turn off to train from scratch)
+
 
 # Configure model
 model = cGAN(config)
@@ -105,8 +113,8 @@ def get_curves(train_array, val_array, y_axis_title, ylims = 'default'):
 
 #-------------------------------
 mpath = r'/home/nghiemb/RMC_repos/MoCo_cGAN_Hewlett_NMR2024'
-# spath = mpath + r'/savedModels/cGAN_complex/checkpoints'
-spath = mpath + r'/savedModels/cGAN/checkpoints'
+spath = mpath + r'/savedModels/cGAN_complex/checkpoints'
+# spath = mpath + r'/savedModels/cGAN/checkpoints'
 
 loss = np.load(spath + r'/loss.npy', allow_pickle=1).item() #recover dictionary from 0-array
 
