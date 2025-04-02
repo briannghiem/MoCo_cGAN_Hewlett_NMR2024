@@ -35,7 +35,8 @@ def slab2volume(slabs):
 #-------------------------------------------------------------------------------
 # SETTING UP MODEL
 
-model_type = 'cGAN_complex'
+# model_type = 'cGAN_complex'
+model_type = 'cGAN'
 
 config = Config(model_type)
 
@@ -43,7 +44,10 @@ config = Config(model_type)
 config.data.dir = r'/home/nghiemb/Data/CC/simulated_datasets/MoCo_cGAN_Hewlett_NMR2024'
 
 config.load.opt = 1 # load saved models
-config.load.checkpoint = '99'
+# config.load.checkpoint = '99'
+# config.load.checkpoint = '39'
+config.load.checkpoint = '13'
+
 config.training.num_epochs = int(config.load.checkpoint) - 1 # skip training and stick with saved model
 
 model = cGAN(config)
@@ -81,6 +85,7 @@ plot_views(abs(corrected_array))
 
 
 '''
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -103,6 +108,7 @@ def plot_views(img, vmax = 1.0):
             ax.imshow(img[:,:,img.shape[2]//2], cmap = "gray", vmax = vmax)
         #
     plt.show()
+
 
 ind_slab = 16
 temp_GT = groundtruth_store[ind_slab].numpy()
